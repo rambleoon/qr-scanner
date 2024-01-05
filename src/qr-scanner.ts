@@ -633,7 +633,7 @@ class QrScanner {
             && BarcodeDetector.getSupportedFormats
             && (await BarcodeDetector.getSupportedFormats()).includes('qr_code');
 
-        if (!useBarcodeDetector) return createWorker();
+        if (!useBarcodeDetector) {window.panterQrEngine = 'worker';return createWorker();}
 
         // On Macs with an M1/M2 processor and macOS Ventura (macOS version 13), the BarcodeDetector is broken in
         // Chromium based browsers, regardless of the version. For that constellation, the BarcodeDetector does not
@@ -651,8 +651,8 @@ class QrScanner {
                 .then(({ architecture, platformVersion }) =>
                     /arm/i.test(architecture || 'arm') && parseInt(platformVersion || '13') >= /* Ventura */ 13)
                 .catch(() => true);
-        if (isChromiumOnMacWithArmVentura) return createWorker();
-
+        if (isChromiumOnMacWithArmVentura) return {createWorker();    window.panterQrEngine = 'worker';}
+        window.panterQrEngine = 'BarcodeDetector';
         return new BarcodeDetector({ formats: ['qr_code'] });
     }
 
