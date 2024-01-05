@@ -625,7 +625,7 @@ class QrScanner {
         }
 
         // @ts-ignore no types defined for import
-        const createWorker = () => (import('./qr-scanner-worker.min.js') as Promise<{ createWorker: () => Worker }>)
+        const createWorker = () => (import('./../qr-scanner-worker.min.js') as Promise<{ createWorker: () => Worker }>)
             .then((module) => module.createWorker());
 
         const useBarcodeDetector = !QrScanner._disableBarcodeDetector
@@ -651,7 +651,7 @@ class QrScanner {
                 .then(({ architecture, platformVersion }) =>
                     /arm/i.test(architecture || 'arm') && parseInt(platformVersion || '13') >= /* Ventura */ 13)
                 .catch(() => true);
-        if (isChromiumOnMacWithArmVentura) return {createWorker();    window.panterQrEngine = 'worker';}
+        if (isChromiumOnMacWithArmVentura) {  window.panterQrEngine = 'worker';return createWorker();}
         window.panterQrEngine = 'BarcodeDetector';
         return new BarcodeDetector({ formats: ['qr_code'] });
     }
